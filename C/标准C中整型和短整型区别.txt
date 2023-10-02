@@ -1,0 +1,63 @@
+C语言中， 有符号整型和有符号短整型的值域都是 -32768 ～ +32767 （无符号整型与短整型均为 0 ～ 65535），他们之间有什么区别呢？
+这主要是根据机器的位数决定的 在16位机上，并没有什么差别，但是在比16位机高的机器上，短整型始终定义为16位。而这时整型为32位，长整型也为32位
+1、 整型
+
+          Long long   long    int      short            整数范围（十进制）
+
+16位机    64           32     16       16                 -32768~32767
+
+32位机    64           32     32       16          -2147483648~2147483646
+
+64位机    64           32     32       16            -9223372036854775808~..
+
+ 
+
+2、整型输出
+
+%d   int型    
+%u   无符号int   
+%ld  long型 
+%lu  无符号long   
+%hd  short型                  
+%lld long long型（某些编译器不支持）
+
+ 
+
+3、数制输出   例：36
+
+10进制： %d : 36                  %d   :36
+8进制： %o : 44                  %#o :044
+16进制： %x : 24                  %#x :0x24
+
+
+
+ 
+
+有关整型的一些常识：
+
+a. c/c++对整型长度的规定是为了执行效率，将int定义为机器字长可以取得最大的执行速度; 
+b. c/c++中整型包括：int, char 和 enum, c++中还包含bool类型,c99中bool是一个宏，实际为_bool; 
+c. c 和 c++ 对 enum 的规定有所不同，这里不描述; 
+d. 修饰整型正负的有 signed 和 unsigned，对于 int 默认为 signed; 
+e. 修饰 int 大小的有 short 和 long, 部分编译器还扩展了一些更长的整型，比如 long long 和 __int64, c99中增加了long long和unsigned long long; 
+f. int 的长度 与 机器字长相同, 16位的编译器上int长16位,32位的编译器上int长32位; 
+g. short int 的长度 小于等于 int 的长度，注意她们可能长度相等，这取决于编译器; 
+h. long int 的长度 大于等于 int 的长度，注意她们可能长度相等，这取决于编译器; 
+i. char 的长度应当可以包容得下一个字符，大部分系统中就是一个字节，而有的系统中可能是4个字节，因为这些系统中一个字符需要四个字节来描述; 
+j. char 的正负取决于编译器，而编译器的决定取决于操作系统，在不同的编译器中char可能等同于signed char，也可能等同于unsigned char;
+
+总结: 
+a. 出于效率考虑，应该尽量使用int和unsigned int; 
+b. 当需要指定容量的整型时，不应该直接使用short、int、long等，因为在不同的编译器上她们的容量不相同。此时应该定义她们相应的宏或类型，比如在vc++6.0中，可以如下定义： 
+typedef unsigned char ubyte; 
+typedef signed char sbyte; 
+typedef unsigned short int uword; 
+typedef signed short int sword; 
+typedef unsigned int udword; 
+typedef signed int sdword; 
+typedef unsigned __int64 uqword; 
+typedef signed __int64 sqword; 
+然后在代码中使用 ubyte、sbyte、uword 等，这样当代码移植的时候只需要修改相应的类型即可。 
+定义自己的类型虽然在代码移植的时候只需要修改一处即可，但仍然属于源代码级别的修改，所以 c++ 2.0 中将这些类型定义在模板中，可以做到代码移植时无需修改代码。 
+c. 在定义char时，一定要加上 signed 或 unsigned，因为她的正负在不同的编译器上并不相同。 
+d. 不要想当然的以为char是1字节长，因为她的长度在不同的编译器上并不相同。
